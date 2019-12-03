@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SMSTest</string>
+    <string name="wang_zhi">http://10.7.89.36:8080/canMouZhangSignTest/</string>
+</resources>
