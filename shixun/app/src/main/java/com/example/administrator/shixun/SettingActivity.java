@@ -1,11 +1,11 @@
 package com.example.administrator.shixun;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.administrator.shixun.LoginAndSignup.LoginActivity;
 
@@ -39,14 +39,11 @@ public class SettingActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.exit:
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "已退出当前账号",
-                            Toast.LENGTH_SHORT
-                    ).show();
+//                    System.exit(0);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        finishAffinity();
+                    }
                     System.exit(0);
-
-
                     break;
                 case R.id.first:
                     Intent intent = new Intent(SettingActivity.this,CountActivity.class);

@@ -1,5 +1,5 @@
 <resources>
-    <string name="wang_zhi">http://10.7.89.36:8080/canMouZhangSignTest/</string>
+    <string name="wang_zhi">http://10.7.89.152:8080/canMouZhangSignTest/</string>
 <!--    <string name="wang_zhi">http://192.168.137.47:8080/canMouZhangSignTest/</string>-->
 <!--    <string name="wang_zhi">http://192.168.43.176:8080/canMouZhangSignTest/</string>-->
     <string name="app_name">餐谋长</string>

@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:text="退出账户" />
+                android:text="退出餐谋长" />
 
             <View
                 android:layout_width="0dp"

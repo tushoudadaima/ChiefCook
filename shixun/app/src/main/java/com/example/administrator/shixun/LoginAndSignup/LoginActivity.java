@@ -2,6 +2,7 @@ package com.example.administrator.shixun.LoginAndSignup;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText et_phone;
@@ -78,6 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                         MyApplication myApplication = (MyApplication) getApplication();
                         String phone = et_phone.getText().toString().trim();
                         myApplication.setPhone(phone);
+
+                        if(radio == 1) {
+                            SaveBuyerData();
+                        }else {
+                            SaveSellerData();
+                        }
 
                         Intent intent = new Intent();
                         intent.putExtra("index","fs");
@@ -155,6 +165,35 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    //保存买家id password
+    private void SaveBuyerData() {
+        DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
+        Date curDate =  new Date(System.currentTimeMillis());
+        String buyerStr = df.format(curDate);
+        String phone = et_phone.getText().toString().trim();
+        String password = et_password.getText().toString().trim();
+
+        SharedPreferences.Editor editor = getSharedPreferences("buyerData",MODE_PRIVATE).edit();
+        editor.putString("buyerId",phone);
+        editor.putString("password",password);
+        editor.putString("time",buyerStr);
+        editor.apply();
+
+    }
+    private void SaveSellerData() {
+        DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
+        Date curDate =  new Date(System.currentTimeMillis());
+        String sellerStr  = df.format(curDate);
+        String phone = et_phone.getText().toString().trim();
+        String password = et_password.getText().toString().trim();
+        SharedPreferences.Editor editor = getSharedPreferences("sellerData",MODE_PRIVATE).edit();
+        editor.putString("sellerId",phone);
+        editor.putString("password",password);
+        editor.putString("time",sellerStr);
+        editor.apply();
+    }
+
     private void BuyerLogin() {
         new Thread(){
             public void run(){

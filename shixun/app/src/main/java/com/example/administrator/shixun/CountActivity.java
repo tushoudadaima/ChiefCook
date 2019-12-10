@@ -2,6 +2,7 @@ package com.example.administrator.shixun;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -62,13 +63,20 @@ public class CountActivity extends AppCompatActivity {
                     break;
 
                 case R.id.thirdchange:
-                    System.exit(0);
+                    Toast.makeText(getApplicationContext(),"已退出",Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = getSharedPreferences("buyerData",MODE_PRIVATE).edit();
+                    editor.clear();
+                    editor.apply();
+                    SharedPreferences.Editor editor2 = getSharedPreferences("sellerData",MODE_PRIVATE).edit();
+                    editor2.clear();
+                    editor2.apply();
+                    MyApplication myApplication = (MyApplication) getApplication();
+                    String phone ="点击登录";
+                    myApplication.setPhone(phone);
 
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "已退出",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    Intent intent2 = new Intent(CountActivity.this, MainActivity.class);
+                    intent2.putExtra("index","fs");
+                    startActivity(intent2);
                     break;
             }
         }
