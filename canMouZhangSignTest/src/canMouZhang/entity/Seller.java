@@ -2,17 +2,18 @@ package canMouZhang.entity;
 
 public class Seller {
 	private String sellerId;
-	private String sellerName;
 	private String sellerPassword;
+	private String sellerName;
 	private String sellerHeadImg;
 	private String sellerAddr;
+	
 	
 	
 	public Seller() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Seller(String sellerId, String sellerName, String sellerPassword, String sellerHeadImg, String sellerAddr) {
+	public Seller(String sellerId, String sellerPassword, String sellerName, String sellerHeadImg, String sellerAddr) {
 		super();
 		this.sellerId = sellerId;
 		this.sellerName = sellerName;
