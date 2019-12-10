@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">SMSTest</string>
-    <string name="wang_zhi">http://10.7.89.36:8080/canMouZhangSignTest/</string>
+    <string name="wang_zhi">http://10.7.89.152:8080/canMouZhangSignTest/</string> //学院网 默认
+    <string name="wang_zhi2">http://192.168.43.176:8080/canMouZhangSignTest/</string> //16T网
+    <string name="wang_zhi3">http://192.168.23.9:8080/canMouZhangSignTest/</string> //网
+    <string name="wang_zhi4">http://192.168.2.162:8080/canMouZhangSignTest/</string> //宿舍 5g网
 </resources>

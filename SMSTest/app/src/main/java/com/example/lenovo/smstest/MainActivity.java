@@ -3,6 +3,7 @@ package com.example.lenovo.smstest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.nfc.FormatException;
@@ -22,17 +23,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.TooManyListenersException;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
+
+import static com.mob.tools.utils.DeviceHelper.getApplication;
 
 public class MainActivity extends AppCompatActivity  {
     private EditText et_phone;
@@ -52,23 +71,71 @@ public class MainActivity extends AppCompatActivity  {
     private Handler handler = new Handler();
     private int radio =1;
     private String wang_zhi ;
+    private String wang_zhi2 ;
+    private String wang_zhi3 ;
     private int a =0;
+    private TextView text2;
+    private int internet = 1;
+    private TextView text3;
+    private Button save_data;
+    private Button restore_data;
+    private Button clear_data;
 
-    private String string;
-    private CharSequence temp;//监听前的文本
-    private int editStart;//光标开始位置
-    private int editEnd;//光标结束位置
-    private final int charMaxNum = 10;
 
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        wang_zhi=this.getString(R.string.wang_zhi);
+
+//        wang_zhi=this.getString(R.string.wang_zhi);
+        wang_zhi = this.getString(R.string.wang_zhi4);
+        wang_zhi2 = this.getString(R.string.wang_zhi2);
+        wang_zhi3 = this.getString(R.string.wang_zhi3);
+//        MyApplication myApplication = (MyApplication) getApplication();
+//        wang_zhi = myApplication.getWangzhi();
+//        if(myApplication.getWangzhi()!=wang_zhi){
+//            wang_zhi = wang_zhi2;
+//
+//        }
+
+//        Toast.makeText(getApplicationContext(),"验证码发送成功",Toast.LENGTH_SHORT).show();
+//        Message msg = Message.obtain();
+//        msg.what=10;//先切换网络 不行的话 最后提示无网络
+//        handler.sendMessage(msg);
 
         getViews();
         registListener();
+
+        SharedPreferences buyerSP = getSharedPreferences("buyerData",MODE_PRIVATE);
+        SharedPreferences sellerSP = getSharedPreferences("sellerData",MODE_PRIVATE);
+        String buyerId = buyerSP.getString("buyerId","");
+        String sellerId = sellerSP.getString("sellerId","");
+        String buyerTime = buyerSP.getString("time","");
+        String sellerTime = sellerSP.getString("time","");
+
+        if (!buyerId.equals("")&&!sellerId.equals("")){
+                @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
+                try {
+                    Date buyerData = df.parse(buyerTime);
+                    Date sellerData = df.parse(sellerTime);
+                    if(buyerData.getTime()>sellerData.getTime()){
+                        BuyerLogin2();
+                    }else {
+                        SellerLogin2();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+        }else if(buyerId.equals("")&&!sellerId.equals("")){
+            SellerLogin2();
+        }else if(!buyerId.equals("")){
+            BuyerLogin2();
+        }
+
+
+        et_password.addTextChangedListener(textWatcher);
+        et_repassword.addTextChangedListener(textWatcher2);
 
         handler = new Handler(){
             public void handleMessage(Message msg) {
@@ -119,7 +186,56 @@ public class MainActivity extends AppCompatActivity  {
                         Toast.makeText(getApplicationContext(),"账号或密码不正确",Toast.LENGTH_SHORT).show();
                         break;
                     case 9:
-                        Toast.makeText(getApplicationContext(),"登录成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"买家登录成功",Toast.LENGTH_SHORT).show();
+                        text3.setText("已登录");
+                        SaveBuyerData();
+                        break;
+                    case 10:
+                        Toast.makeText(getApplicationContext(),"finally 捕获 服务器异常无网络",Toast.LENGTH_LONG).show();
+//                        MyApplication myApplication = (MyApplication) getApplication();
+//                        myApplication.setWangzhi(wang_zhi2);
+//                        wang_zhi = wang_zhi2;
+//                        wang_zhi = wang_zhi3;
+//                        checkInternet2();
+
+                        break;
+                    case 11:
+                        Toast.makeText(getApplicationContext(),"IO 捕获 无网络",Toast.LENGTH_LONG).show();
+                        break;
+                    case 12:
+                        Toast.makeText(getApplicationContext(),"ConnectException 捕获",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 13:
+                        Toast.makeText(getApplicationContext(),"finally  捕获 无网",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 14:
+                        Toast.makeText(getApplicationContext(),"if无网络",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 15:
+                        Toast.makeText(getApplicationContext(),"else 有网络",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 16:
+                        Toast.makeText(getApplicationContext(),"finally  2次捕获 无网",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 17:
+                        Toast.makeText(getApplicationContext(),"C",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 18:
+                        Toast.makeText(getApplicationContext(),"M",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 19:
+                        Toast.makeText(getApplicationContext(),"U",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 22:
+                        Toast.makeText(getApplicationContext(),"U2",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 21:
+                        Toast.makeText(getApplicationContext(),"s",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 23:
+                        Toast.makeText(getApplicationContext(),"seller登录成功",Toast.LENGTH_SHORT).show();
+                        text3.setText("已登录");
+                        SaveSellerData();
                         break;
                     default:
                         Toast.makeText(getApplicationContext(),"错误",Toast.LENGTH_SHORT).show();
@@ -127,7 +243,212 @@ public class MainActivity extends AppCompatActivity  {
                 }
             }
         };
+
+        checkInternet();
+
+//        if(checkUrl(wang_zhi+"CheckBuyerServlet",1000)){
+//            Toast.makeText(getApplicationContext(),"ok",Toast.LENGTH_SHORT).show();
+//        }else {
+//            Toast.makeText(getApplicationContext(),"error",Toast.LENGTH_SHORT).show();
+//        }
+//        int b = checkUrl(wang_zhi+"CheckBuyerServlet",1);
+//        Toast.makeText(getApplicationContext(),b+"",Toast.LENGTH_SHORT).show();
+//        if( newCheckInternet()){
+//            Toast.makeText(getApplicationContext(),"ok2",Toast.LENGTH_SHORT).show();
+//        }else {
+//            Toast.makeText(getApplicationContext(),"error2",Toast.LENGTH_SHORT).show();
+//        }
+//        testUrlWithTimeOut("http://10.7.89.152:8080/canMouZhangSignTest/CheckBuyerServlet?buyerId=1", 2000);
+
+
     }
+
+    private Boolean newCheckInternet(){
+        Socket socket = null;
+        String phone = "1";
+        try {
+            URL url =new URL(wang_zhi+"CheckBuyerServlet?buyerId"+phone );
+            String host = url.getHost();
+            int port = url.getPort();
+            if (port == -1) {
+                port = 80;
+            }
+            socket = new Socket();
+            InetSocketAddress isa = new InetSocketAddress(InetAddress.getByName(host), port);
+
+            socket.connect(isa, 1000);
+            if (socket.isConnected()) {
+//                Toast.makeText(getApplicationContext(),"ok",Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+//                Toast.makeText(getApplicationContext(),"error",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    public int checkUrl(String address, int waitMilliSecond)
+    {
+        try{
+            URL url = new URL(address);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setUseCaches(false);
+            conn.setInstanceFollowRedirects(true);
+            conn.setConnectTimeout(waitMilliSecond);
+            conn.setReadTimeout(waitMilliSecond);
+
+            try {
+                conn.connect();
+            } catch(Exception e) {
+                e.printStackTrace();
+                return 1;
+            }
+
+            int code = conn.getResponseCode();
+            Toast.makeText(getApplicationContext(),code,Toast.LENGTH_SHORT).show();
+            if ((code >= 100) && (code < 400)){
+                return code;
+            }
+
+            return code;
+        }catch (IOException e){
+            e.printStackTrace();
+            return 2;
+        }
+    }
+
+
+    private void checkInternet() {
+        new Thread() {
+            @Override
+            public void run() {
+                    String phone = "1";
+                try {
+                    URL url = new URL(wang_zhi+"CheckBuyerServlet?buyerId="+phone );
+                    URLConnection conn = url.openConnection();
+                    InputStream in = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+                    String info=reader.readLine();
+                    String str="";
+                    while(info!=null) {
+                        str = info;
+                        info=reader.readLine();
+                    }
+                    if(str.equals("")){
+                        internet = 1;//无网络
+//                        Message msg = Message.obtain();
+//                        msg.what=14;//先切换网络 不行的话 最后提示无网络
+//                        handler.sendMessage(msg);
+                    }else{
+                        internet = 2;//有
+                        Message msg2 = Message.obtain();
+                        msg2.what=15;//else 有网络
+                        handler.sendMessage(msg2);
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                finally{
+                    if(internet==1){
+                        Message msg = Message.obtain();
+                        msg.what=10;//无网络 先切换网络 不行的话 最后提示无网络
+                        handler.sendMessage(msg);
+                    }
+                }
+            }
+        }.start();
+
+    }
+    private void checkInternet2() {
+        new Thread() {
+            @Override
+            public void run() {
+                String phone = "1";
+                try {
+                    URL url = new URL(wang_zhi+"CheckBuyerServlet?buyerId="+phone );
+                    URLConnection conn = url.openConnection();
+                    InputStream in = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+                    String info=reader.readLine();
+                    String str="";
+                    while(info!=null) {
+                        str = info;
+                        info=reader.readLine();
+                    }
+                    if(str.equals("")){
+                        internet = 1;//无网络
+//                        Message msg = Message.obtain();
+//                        msg.what=14;//先切换网络 不行的话 最后提示无网络
+//                        handler.sendMessage(msg);
+                    }else{
+                        internet = 2;//有
+                        Message msg2 = Message.obtain();
+                        msg2.what=15;//
+                        handler.sendMessage(msg2);
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally{
+                    if(internet==1){
+                        Message msg = Message.obtain();
+                        msg.what=16;//先切换网络 不行的话 最后提示无网络
+                        handler.sendMessage(msg);
+                    }
+                }
+            }
+        }.start();
+
+    }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(s.length()>=6){
+                text2.setText("ok");
+            }else {
+                text2.setText("密码不足6位");
+            }
+        }
+    };
+    private TextWatcher textWatcher2 = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+            String password = et_password.getText().toString().trim();
+            String repassword = et_repassword.getText().toString().trim();
+            if(password.equals(repassword)){
+                text2.setText("ok");
+            }else {
+                text2.setText("error");
+            }
+        }
+    };
 
     private void registListener() {
         listener = new CustomeOnClickListener();
@@ -137,6 +458,9 @@ public class MainActivity extends AppCompatActivity  {
         btn_forget.setOnClickListener(listener);
         buyer_res.setOnClickListener(listener);
         seller_res.setOnClickListener(listener);
+        save_data.setOnClickListener(listener);
+        restore_data.setOnClickListener(listener);
+        clear_data.setOnClickListener(listener);
     }
 
     private void getViews() {
@@ -150,6 +474,11 @@ public class MainActivity extends AppCompatActivity  {
         btn_forget = findViewById(R.id.btn_forget);
         buyer_res = findViewById(R.id.buyer_res);
         seller_res = findViewById(R.id.seller_res);
+        text2 = findViewById(R.id.text2);
+        text3 = findViewById(R.id.text3);
+        save_data = findViewById(R.id.save_data);
+        restore_data = findViewById(R.id.restore_data);
+        clear_data = findViewById(R.id.clear_data);
     }
 
     private class CustomeOnClickListener implements View.OnClickListener{
@@ -188,8 +517,86 @@ public class MainActivity extends AppCompatActivity  {
                 case R.id.seller_res://卖家注册
                     radio = 2;
                     break;
+                case R.id.save_data:
+//                    SaveBuyerData();
+//                    SaveSellerData();
+                    break;
+                case R.id.restore_data:
+                    RestoreBuyerData();
+                    RestoreSellerData();
+                    break;
+                case R.id.clear_data:
+                    Toast.makeText(getApplicationContext(),"清除",Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = getSharedPreferences("buyerData",MODE_PRIVATE).edit();
+                    editor.clear();
+                    editor.apply();
+                    SharedPreferences.Editor editor2 = getSharedPreferences("sellerData",MODE_PRIVATE).edit();
+                    editor2.clear();
+                    editor2.apply();
+//                    File directory = new File("/data/data/com.example.lenovo.smstest/shared_prefs");
+//                    if (directory != null && directory.exists() && directory.isDirectory()) {
+//                        for (File item : directory.listFiles()) {
+//                            item.delete();
+//                        }
+//                    }
+//
+//                    deleteFilesByDirectory(new File("/data/data/"
+//                            + getApplicationContext().getPackageName() + "/shared_prefs"));
+                    break;
             }
         }
+    }
+    //保存买家id password
+    private void SaveBuyerData() {
+        DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
+        Date curDate =  new Date(System.currentTimeMillis());
+        String buyerStr = df.format(curDate);
+        String phone = et_phone.getText().toString().trim();
+        String password = et_password.getText().toString().trim();
+
+        SharedPreferences.Editor editor = getSharedPreferences("buyerData",MODE_PRIVATE).edit();
+        editor.putString("buyerId",phone);
+        editor.putString("password",password);
+//        editor.putInt("time",time);
+        editor.putString("time",buyerStr);
+        editor.apply();
+
+    }
+    private void SaveSellerData() {
+        DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
+        Date curDate =  new Date(System.currentTimeMillis());
+        String sellerStr  = df.format(curDate);
+        String phone = et_phone.getText().toString().trim();
+        String password = et_password.getText().toString().trim();
+        SharedPreferences.Editor editor = getSharedPreferences("sellerData",MODE_PRIVATE).edit();
+        editor.putString("sellerId",phone);
+        editor.putString("password",password);
+//        editor.putInt("time",time);
+        editor.putString("time",sellerStr);
+        editor.apply();
+    }
+
+    private void RestoreBuyerData(){
+        SharedPreferences preferences = getSharedPreferences("buyerData",MODE_PRIVATE);
+        String buyerId = preferences.getString("buyerId","");
+        String password = preferences.getString("password","");
+        if(!buyerId.equals("")){
+            if (!password.equals("")){
+                BuyerLogin2();
+            }
+        }
+        Toast.makeText(getApplication(),buyerId+":"+password,Toast.LENGTH_SHORT).show();
+    }
+    private void RestoreSellerData(){
+        SharedPreferences preferences = getSharedPreferences("sellerData",MODE_PRIVATE);
+        String sellerId = preferences.getString("sellerId","");
+        String password = preferences.getString("password","");
+        if(!sellerId.equals("")){
+            if (!password.equals("")){
+                BuyerLogin2();
+            }
+        }
+        Toast.makeText(getApplication(),sellerId+":"+password,Toast.LENGTH_SHORT).show();
     }
 
     private void BuyerLogin() {
@@ -204,9 +611,36 @@ public class MainActivity extends AppCompatActivity  {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
                     String info=reader.readLine();
                     if(info!=null) {
-//                        Intent intent = new Intent();
-//                        intent.setClass(MainActivity.this, ForgetPassword.class);
-//                        startActivity(intent);
+                        Message msg = Message.obtain();
+                        msg.what=9;//buyer登录成功
+                        handler.sendMessage(msg);
+                    }else{
+                        Message msg = Message.obtain();
+                        msg.what=8;//账号密码错误
+                        handler.sendMessage(msg);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    //从SharedPreference中获取id 密码登录
+    private void BuyerLogin2(){
+        new Thread(){
+            public void run(){
+                try {
+//                    String phone = et_phone.getText().toString().trim();
+//                    String password = et_password.getText().toString().trim();
+                    SharedPreferences preferences = getSharedPreferences("buyerData",MODE_PRIVATE);
+                    String buyerId = preferences.getString("buyerId","");
+                    String password = preferences.getString("password","");
+                    URL url = new URL(wang_zhi+"BuyerLoginServlet?buyerId=" + buyerId+"&buyerPassword="+password);
+                    URLConnection conn = url.openConnection();
+                    InputStream in = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+                    String info=reader.readLine();
+                    if(info!=null) {
                         Message msg = Message.obtain();
                         msg.what=9;//登录成功
                         handler.sendMessage(msg);
@@ -220,7 +654,9 @@ public class MainActivity extends AppCompatActivity  {
                 }
             }
         }.start();
+
     }
+
     private void SellerLogin() {
         new Thread(){
             public void run(){
@@ -233,11 +669,38 @@ public class MainActivity extends AppCompatActivity  {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
                     String info=reader.readLine();
                     if(info!=null) {
-//                        Intent intent = new Intent();
-//                        intent.setClass(MainActivity.this, MainActivity.class);
-//                        startActivity(intent);
+
                         Message msg = Message.obtain();
-                        msg.what=9;//登录成功
+                        msg.what=23;//seller登录成功
+                        handler.sendMessage(msg);
+                    }else{
+                        Message msg = Message.obtain();
+                        msg.what=8;//账号或密码不正确
+                        handler.sendMessage(msg);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    private void SellerLogin2() {
+        new Thread(){
+            public void run(){
+                try {
+                    SharedPreferences preferences = getSharedPreferences("sellerData",MODE_PRIVATE);
+                    String sellerId = preferences.getString("sellerId","");
+                    String password = preferences.getString("password","");
+
+                    URL url = new URL(wang_zhi+"SellerLoginServlet?sellerId=" + sellerId+"&sellerPassword="+password);
+                    URLConnection conn = url.openConnection();
+                    InputStream in = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+                    String info=reader.readLine();
+                    if(info!=null) {
+
+                        Message msg = Message.obtain();
+                        msg.what=23;//seller登录成功
                         handler.sendMessage(msg);
                     }else{
                         Message msg = Message.obtain();
@@ -281,6 +744,8 @@ public class MainActivity extends AppCompatActivity  {
             }
         }.start();
     }
+
+
     private void checkSellerLogin() {
         new Thread() {
             @Override

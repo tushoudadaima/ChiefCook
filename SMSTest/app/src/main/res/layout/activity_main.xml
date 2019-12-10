@@ -31,11 +31,33 @@
     </LinearLayout>
 
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/et_password"
-        android:hint="密码"/>
+        android:orientation="horizontal"
+
+        android:layout_marginTop="10dp"
+        >
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="3dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="3"
+            android:background="@null"
+            android:hint="密码"
+
+            />
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="0"
+            android:gravity="left"
+            android:textSize="15dp"
+          />
+    </LinearLayout>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,5 +98,29 @@
             android:layout_weight="1"/>
 
     </RadioGroup>
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="未登录"
+        android:gravity="left"
+        android:textSize="15dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/save_data"
+        android:text="Save data"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/restore_data"
+        android:text="Restore data"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clear_data"
+        android:text="Clear data"/>
+
 
 </LinearLayout>
