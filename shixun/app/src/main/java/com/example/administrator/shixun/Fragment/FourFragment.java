@@ -1,8 +1,11 @@
 package com.example.administrator.shixun.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,50 +25,68 @@ import com.example.administrator.shixun.MyApplication;
 import com.example.administrator.shixun.R;
 import com.example.administrator.shixun.SettingActivity;
 
+import java.io.File;
+
 import static com.mob.tools.utils.DeviceHelper.getApplication;
 
 
 public class FourFragment extends Fragment {
     private CustomeClickListener listener;
-    private ImageView login;
+//    private ImageView login;
     private LinearLayout aboutus;
     private TextView mine_login;
     private LinearLayout setting;
     private LinearLayout vip;
     private TextView dashang;
+    private ImageView head_iv;
 //    private String phone;
     private String text;
+    private String phone;
 
     private LinearLayout share;
+
+    private String wang_zhi;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fourfragment, container,false);
-        login=view.findViewById(R.id.head_iv);
+//        login=view.findViewById(R.id.head_iv);
         aboutus=view.findViewById(R.id.aboutus);
         dashang=view.findViewById(R.id.dashang);
         mine_login=view.findViewById(R.id.mine_login);
         setting=view.findViewById(R.id.setting);
         share=view.findViewById(R.id.share);
         vip=view.findViewById(R.id.vip);
+        head_iv = view.findViewById(R.id.head_iv);
+
+        wang_zhi = this.getString(R.string.wang_zhi);
+
+//        okHttpClient = new OkHttpClient();
         registerListeners();
 
         MyApplication myApplication = (MyApplication) getApplication();
-//        MyApplication myApplication = new MyApplication();
-//        String phone1 = myApplication.getApplication();
-        String phone = myApplication.getPhone();
-//        Toast.makeText(getContext(),phone,Toast.LENGTH_SHORT).show();
+        phone = myApplication.getPhone();
+
         if(phone.equals("null")){
             text = "点击登录";
         }else {
             text =phone;
             mine_login.setText(text);
         }
+        setImage();//加载头像
         return view;
+    }
+
+
+    @Override
+    public void onResume() {//每次点击frament都加载一次头像
+        setImage();
+        super.onResume();
     }
 
     private void registerListeners() {
         listener = new CustomeClickListener();
-        login.setOnClickListener(listener);
+        head_iv.setOnClickListener(listener);
         aboutus.setOnClickListener(listener);
         dashang.setOnClickListener(listener);
         share.setOnClickListener(listener);
@@ -82,30 +103,26 @@ public class FourFragment extends Fragment {
                 case R.id.aboutus:
                     Intent intent2 = new Intent(getActivity(), AboutActivity.class);
                     startActivity(intent2);
-
                     break;
 
                 case R.id.mine_login:
+                case R.id.head_iv:
                     text=mine_login.getText().toString();
-                    if (text.equals("点击登录")){
+                    if (text.equals("点击登录")){//跳转登录页
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
-                    }else {
+                    }else {//跳转个人页
                         Intent intent4 = new Intent(getActivity(), CountActivity.class);
                         startActivity(intent4);
                     }
-
                     break;
-                case R.id.setting:
 
+                case R.id.setting:
                     Intent intent3 = new Intent(getActivity(), SettingActivity.class);
                     startActivity(intent3);
-
                     break;
 
                 case R.id.share:
-//                    Intent intent3 = new Intent(getActivity(),SettingActivity.class);
-//                    startActivity(intent3);
                     Intent qqIntent = new Intent(Intent.ACTION_SEND);
                     qqIntent.setPackage("com.tencent.mobileqq");
                     qqIntent.setType("text/plain");
@@ -161,13 +178,23 @@ public class FourFragment extends Fragment {
                     });
                     //    显示出该对话框
                     builder.show();
-
                     break;
 
             }
 
         }
     }
+
+    private void setImage() {
+        @SuppressLint("SdCardPath")
+        String path1 = "/data/data/com.example.administrator.shixun/files"+"/CanMouZhang/"+phone+".jpg";
+        File file = new File("/data/data/com.example.administrator.shixun/files"+"/CanMouZhang/"+phone+".jpg");
+        if(file.exists()){
+            Bitmap bitmap = BitmapFactory.decodeFile(path1);
+            head_iv.setImageBitmap(bitmap);
+        }
+    }
+
 }
 
 

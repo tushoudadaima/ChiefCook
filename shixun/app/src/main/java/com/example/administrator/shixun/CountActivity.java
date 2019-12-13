@@ -1,12 +1,15 @@
 package com.example.administrator.shixun;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +19,16 @@ import android.widget.Toast;
 
 import com.example.administrator.shixun.LoginAndSignup.ForgetPassword;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import okhttp3.OkHttpClient;
 
 public class CountActivity extends AppCompatActivity {
     private LinearLayout firstchange;
@@ -24,12 +36,55 @@ public class CountActivity extends AppCompatActivity {
     private ImageView image;
     private LinearLayout secondchange;
     private LinearLayout thirdchange;
+    private String img_src;
+    private String path;
+    private String path2;
+    private String path3;
+    private String buyerId;
+    private String sellerId;
+    private String buyerOrSeller;
+    private String wang_zhi ;
+    private OkHttpClient okHttpClient;
 
 
+    @SuppressLint("SdCardPath")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_count);
+        okHttpClient = new OkHttpClient();
+
+        wang_zhi = this.getString(R.string.wang_zhi);
+
+        //为了区分buyer seller
+        SharedPreferences buyerSP = getSharedPreferences("buyerData",MODE_PRIVATE);
+        SharedPreferences sellerSP = getSharedPreferences("sellerData",MODE_PRIVATE);
+        buyerId = buyerSP.getString("buyerId","");
+        sellerId = sellerSP.getString("sellerId","");
+        String buyerTime = buyerSP.getString("time","");
+        String sellerTime = sellerSP.getString("time","");
+
+        if (!buyerId.equals("")&&!sellerId.equals("")){
+            @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
+            try {
+                Date buyerData = df.parse(buyerTime);
+                Date sellerData = df.parse(sellerTime);
+                if(buyerData.getTime()>sellerData.getTime()){
+                    buyerOrSeller = "buyer";
+                }else {
+                    buyerOrSeller = "seller";
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else if(buyerId.equals("")&&!sellerId.equals("")){
+
+            buyerOrSeller = "seller";
+        }else if(!buyerId.equals("")){
+            buyerOrSeller = "buyer";
+        }
+
+
         firstchange=findViewById(R.id.firstchange);
         image=findViewById(R.id.imageid);
         secondchange=findViewById(R.id.secondchange);
@@ -49,12 +104,12 @@ public class CountActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.firstchange:
-                    Intent intent = new Intent(Intent.ACTION_PICK,
-
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
                     intent.setType("image/*");
                     startActivityForResult(intent,1);
+
+//                    asyncDownOp();
 
                     break;
                 case R.id.secondchange:
@@ -81,27 +136,90 @@ public class CountActivity extends AppCompatActivity {
             }
         }
     }
+    @SuppressLint("SdCardPath")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //用户操作完成，结果码返回是-1，即RESULT_OK
         if (resultCode == RESULT_OK) {
             //获取选中文件的定位符
             Uri uri = data.getData();
+
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = managedQuery(uri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            path = cursor.getString(column_index);
+
+            path2=getFilesDir().getPath()+"/CanMouZhang/";
+            path3 = path2+buyerId+".jpg";
+            File file2 = new File(path2);
+            File file3 = new File(path3);
+            if(file2.exists()){
+//                Toast.makeText(getApplicationContext(),"存在文件 正在压缩",Toast.LENGTH_SHORT).show();
+                compressBitmap(path,file3);//压缩函数
+            }else {
+//                Toast.makeText(getApplicationContext(),"不存在文件 创建 正在压缩",Toast.LENGTH_SHORT).show();
+                file2.mkdirs();
+                compressBitmap(path,file3);
+            }
             Log.e("uri", uri.toString());
             //使用content的接口
             ContentResolver cr = this.getContentResolver();
+
+            asyncUpOp();//上传函数
+
+            //获取图片
+            Bitmap bitmap = null;
             try {
-                //获取图片
-                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                image.setImageBitmap(bitmap);
+                bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
             } catch (FileNotFoundException e) {
-                Log.e("Exception", e.getMessage(), e);
+                e.printStackTrace();
             }
+            image.setImageBitmap(bitmap);
         } else {
             //操作错误或没有选择图片
             Log.i("MainActivtiy", "operation error");
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @SuppressLint("SdCardPath")
+    private void asyncUpOp() {
+        //创建上传文件的异步任务类的对象
+//        Toast.makeText(getApplicationContext(),path3+"  正在上传",Toast.LENGTH_SHORT).show();
+        UpLoadFileTask task = new UpLoadFileTask(
+                this,
+                path3
+        );
+        //开始执行异步任务
+        task.execute(wang_zhi+"UpLoadBuyerHeadImg?buyerId="+buyerId);
+
+        //如果一个手机号即可以是买家又可以是卖家 就得分开写下面的
+//        if(buyerOrSeller.equals("buyer")){
+//            task.execute(wang_zhi+"UpLoadBuyerHeadImg?buyerId="+buyerId);
+//        }else {
+//            Toast.makeText(getApplicationContext(),"seller还没写",Toast.LENGTH_SHORT).show();
+//        }
+    }
+
+    public void compressBitmap(String filePath, File file){
+        // 数值越高，图片像素越低
+        int inSampleSize = 8;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //采样率
+        options.inSampleSize = inSampleSize;
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 把压缩后的数据存放到baos中
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100 ,baos);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(baos.toByteArray());
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

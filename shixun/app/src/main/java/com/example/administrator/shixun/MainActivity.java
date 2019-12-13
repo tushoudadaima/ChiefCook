@@ -3,6 +3,7 @@ package com.example.administrator.shixun;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,9 +22,12 @@ import com.example.administrator.shixun.Fragment.SecondFragment;
 import com.example.administrator.shixun.Fragment.ThreeFragment;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -34,7 +38,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,19 +52,28 @@ public class MainActivity extends AppCompatActivity {
     public List<Map<String, Object>> dataSource;
     private String a;
     private Handler handler = new Handler();
+    private String buyerId;
+    private String buyerTime;
+    private String sellerId;
+    private String sellerTime;
+    private OkHttpClient okHttpClient;
 
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         wang_zhi = this.getString(R.string.wang_zhi);
         checkInternet();
+        okHttpClient = new OkHttpClient();
+
+
 
         SharedPreferences buyerSP = getSharedPreferences("buyerData",MODE_PRIVATE);
         SharedPreferences sellerSP = getSharedPreferences("sellerData",MODE_PRIVATE);
-        String buyerId = buyerSP.getString("buyerId","");
-        String sellerId = sellerSP.getString("sellerId","");
-        String buyerTime = buyerSP.getString("time","");
-        String sellerTime = sellerSP.getString("time","");
+        buyerId = buyerSP.getString("buyerId","");
+        sellerId = sellerSP.getString("sellerId","");
+        buyerTime = buyerSP.getString("time","");
+        sellerTime = sellerSP.getString("time","");
+
 
         if (!buyerId.equals("")&&!sellerId.equals("")){
             @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yyyy:mm:dd:HH:mm:ss");
@@ -66,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 Date sellerData = df.parse(sellerTime);
                 if(buyerData.getTime()>sellerData.getTime()){
                     BuyerLogin2();
+                    setBuyerImage();
                 }else {
                     SellerLogin2();
                 }
@@ -76,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             SellerLogin2();
         }else if(!buyerId.equals("")){
             BuyerLogin2();
+            setBuyerImage();
         }
 
 
@@ -192,6 +210,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setBuyerImage() {
+        @SuppressLint("SdCardPath") File file = new File(getFilesDir().getPath()+"/CanMouZhang/");
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        if(file.exists()){
+//            Toast.makeText(getApplication(),"存在"+buyerId+".jpg",Toast.LENGTH_SHORT).show();
+            asyncDownOp();
+        }else {
+            file.mkdirs();
+            asyncDownOp();
+//            Toast.makeText(getApplication(),"不存在"+buyerId+".jpg",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void asyncDownOp() {
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    downImg();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    private void downImg() throws IOException {
+        Request request = new Request.Builder()
+                .url(wang_zhi+"DownBuyerImg?buyerId="+buyerId)
+                .build();
+        Call call = okHttpClient.newCall(request);
+        Response response = call.execute();
+        InputStream in = response.body().byteStream();
+        OutputStream out = new FileOutputStream(
+                getFilesDir().getPath()+"/CanMouZhang/"+buyerId+".jpg"
+        );
+
+        byte[] bytes = new byte[1024];
+        int n = -1;
+        while((n = in.read(bytes)) != -1){
+            out.write(bytes, 0 , n);
+            out.flush();
+        }
+        in.close();
+        out.close();
+    }
+
     //从SharedPreference中获取id 密码登录
     private void BuyerLogin2(){
         new Thread(){
@@ -297,5 +365,5 @@ public class MainActivity extends AppCompatActivity {
         imageViewMap.put(tag,imageView);
         return view;
     }
-    
+
 }

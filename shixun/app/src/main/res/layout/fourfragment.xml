@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:orientation="vertical">
 
@@ -11,12 +12,13 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ImageView
+        <com.example.administrator.shixun.CircleImageView
             android:id="@+id/head_iv"
-            android:layout_width="108dp"
-            android:layout_height="93dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/biz_account_login_way_qq" />
+            android:src="@drawable/biz_account_login_way_qq"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,11 +38,7 @@
             android:textColor="#fff"
             android:layout_below="@+id/head_iv"
             android:layout_centerHorizontal="true" />
-
-
-
     </RelativeLayout>
-
 
     <LinearLayout
         android:orientation="vertical"

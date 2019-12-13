@@ -19,14 +19,22 @@ import com.example.administrator.shixun.MyApplication;
 import com.example.administrator.shixun.R;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText et_phone;
@@ -41,6 +49,11 @@ public class LoginActivity extends AppCompatActivity {
     private int radio =1;
     private String wang_zhi ;
     private int a =0;
+    private String buyerId;
+    private String sellerId;
+    private String phone;
+
+    private OkHttpClient okHttpClient;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -48,9 +61,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         wang_zhi=this.getString(R.string.wang_zhi);
+        okHttpClient = new OkHttpClient();
 
         getViews();
         registListener();
+        SharedPreferences buyerSP = getSharedPreferences("buyerData",MODE_PRIVATE);
+        SharedPreferences sellerSP = getSharedPreferences("sellerData",MODE_PRIVATE);
+        buyerId = buyerSP.getString("buyerId","");
+        sellerId = sellerSP.getString("sellerId","");
 
         handler = new Handler(){
             public void handleMessage(Message msg) {
@@ -82,13 +100,11 @@ public class LoginActivity extends AppCompatActivity {
                         MyApplication myApplication = (MyApplication) getApplication();
                         String phone = et_phone.getText().toString().trim();
                         myApplication.setPhone(phone);
-
                         if(radio == 1) {
                             SaveBuyerData();
                         }else {
                             SaveSellerData();
                         }
-
                         Intent intent = new Intent();
                         intent.putExtra("index","fs");
                         intent.setClass(LoginActivity.this, MainActivity.class);
@@ -102,6 +118,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
     }
+
+    private void downImg() throws IOException {
+        Request request = new Request.Builder()
+                .url(wang_zhi+"DownBuyerImg?buyerId="+phone)
+                .build();
+        Call call = okHttpClient.newCall(request);
+        Response response = call.execute();
+        InputStream in = response.body().byteStream();
+        @SuppressLint("SdCardPath") File file = new File(getFilesDir().getPath()+"/CanMouZhang/");
+        if (!file.exists()){
+            file.mkdirs();
+        }
+        OutputStream out = new FileOutputStream(
+                getFilesDir().getPath()+"/CanMouZhang/"+phone+".jpg"
+        );
+        byte[] bytes = new byte[1024];
+        int n = -1;
+        while((n = in.read(bytes)) != -1){
+            out.write(bytes, 0 , n);
+            out.flush();
+        }
+        in.close();
+        out.close();
+    }
+
 
     private void registListener() {
         listener = new CustomeOnClickListener();
@@ -224,7 +265,7 @@ public class LoginActivity extends AppCompatActivity {
         new Thread(){
             public void run(){
                 try {
-                    String phone = et_phone.getText().toString().trim();
+                    phone = et_phone.getText().toString().trim();
                     String password = et_password.getText().toString().trim();;
                     URL url = new URL(wang_zhi+"SellerLoginServlet?sellerId=" + phone+"&sellerPassword="+password);
                     URLConnection conn = url.openConnection();
@@ -232,6 +273,11 @@ public class LoginActivity extends AppCompatActivity {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
                     String info=reader.readLine();
                     if(info!=null) {
+                        try {
+                            downImg();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         Message msg = Message.obtain();
                         msg.what=9;//登录成功
                         handler.sendMessage(msg);
