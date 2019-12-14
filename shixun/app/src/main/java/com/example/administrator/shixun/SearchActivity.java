@@ -22,7 +22,7 @@ public class SearchActivity extends AppCompatActivity {
         img_go = findViewById(R.id.img_go);
         edt_search = findViewById(R.id.tv_title);
         txt_search = findViewById(R.id.txt_search);
-        str = txt_search.getText().toString();
+
         img_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,6 +32,7 @@ public class SearchActivity extends AppCompatActivity {
         txt_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                str = edt_search.getText().toString();
                 Intent intent = new Intent(SearchActivity.this,SimpleActivity.class);
                 intent.putExtra("name",str);
                 startActivity(intent);

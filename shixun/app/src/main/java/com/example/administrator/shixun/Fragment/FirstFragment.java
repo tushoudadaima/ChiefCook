@@ -21,16 +21,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.shixun.Adapter.FirstAdapter;
 import com.example.administrator.shixun.Entity.Show;
+import com.example.administrator.shixun.ListActivity;
 import com.example.administrator.shixun.LoadingDialog;
 import com.example.administrator.shixun.MyApplication;
 import com.example.administrator.shixun.R;
 import com.example.administrator.shixun.SearchActivity;
+import com.example.administrator.shixun.SimpleActivity;
 import com.example.administrator.shixun.Util.Utility;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -47,10 +50,20 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FirstFragment extends Fragment implements ViewPager.OnPageChangeListener {
     private com.example.administrator.shixun.SearchView searchView;
     private SmartRefreshLayout srl;
+    private RelativeLayout click1;
+    private RelativeLayout click2;
+    private RelativeLayout click3;
+    private RelativeLayout click4;
+    private TextView jia;
+    private TextView gao;
+    private TextView hai;
+    private TextView duo;
+    private CustomOnClickListener customOnClickListener;
     private EditText editText;
     private View view;
     private ListView listView;
@@ -69,8 +82,8 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
     private int previousSelectedPosition = 0;
     boolean isRunning = false;
     private Activity activity;
+    private String MUrl;
     @SuppressLint("HandlerLeak")
-
     @Override
     public Context getContext() {
         if(activity == null){
@@ -88,15 +101,10 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // 初始化布局 View视图
-        //initViews();
-
         // Model数据
         initData();
-
         // Controller 控制器
         initAdapter();
-
         // 开启轮询
         new Thread() {
             public void run() {
@@ -116,8 +124,6 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
                     });
                 }
             }
-
-            ;
         }.start();
     }
 
@@ -165,7 +171,6 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
             imageView = new ImageView(this.getContext());
             imageView.setBackgroundResource(imageResIds[i]);
             imageViewList.add(imageView);
-
             // 加小白点, 指示器
             pointView = new View(this.getContext());
             pointView.setBackgroundResource(R.drawable.dian);
@@ -190,6 +195,19 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
             listView = view.findViewById(R.id.list);
             searchView = view.findViewById(R.id.search);
             editText = view.findViewById(R.id.tv_title);
+            jia = view.findViewById(R.id.jia);
+            gao = view.findViewById(R.id.gao);
+            hai = view.findViewById(R.id.hai);
+            duo = view.findViewById(R.id.duo);
+            click1 = view.findViewById(R.id.click1);
+            click2 = view.findViewById(R.id.click2);
+            click3 = view.findViewById(R.id.click3);
+            click4 = view.findViewById(R.id.click4);
+            customOnClickListener  = new CustomOnClickListener();
+            click1.setOnClickListener(customOnClickListener);
+            click2.setOnClickListener(customOnClickListener);
+            click3.setOnClickListener(customOnClickListener);
+            click4.setOnClickListener(customOnClickListener);
             editText.setFocusable(false);
             editText.setCursorVisible(false);
             editText.setOnClickListener(new View.OnClickListener() {
@@ -209,11 +227,14 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
                     switch (msg.what){
                         case 100:
                             str = (String) msg.obj;
+                            Random random = new Random();
+                            int eye = random.nextInt(100);
+                            int zan = random.nextInt(20);
                             String[] a = str.split("&");
                             String[] b = a[0].split("=");
                             String[] c = a[1].split("=");
                             String[] d = a[2].split("=");
-                            Show show = new Show(b[1],c[1],d[1]);
+                            Show show = new Show(b[1],c[1],d[1],eye+"",zan+"");
                             list.add(show);
                             break;
                         case 200:
@@ -229,30 +250,32 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    Intent intent = new Intent(getActivity(), SimpleActivity.class);
+                    intent.putExtra("name",list.get(position).getName());
+                    startActivity(intent);
                 }
             });
 
-            srl.setReboundDuration(3000);
-            srl.setFooterHeight(100);
+            srl.setFooterHeight(50);
             srl.setOnRefreshListener(new OnRefreshListener() {
                 @Override
                 public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                     listView.setAdapter(null);
+                    list.clear();
                     loadingDialog = new LoadingDialog(getContext());
                     loadingDialog.show();
-                    list.clear();
                     showName();
-                    srl.finishRefresh();
+                    srl.finishRefresh(4000);
                 }
             });
 
             srl.setOnLoadMoreListener(new OnLoadMoreListener() {
                 @Override
                 public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                    if (list.size()<40){
+                    int a = listView.getCount();
+                    if (a < 30){
                         showName();
-                        srl.finishLoadMore();
+                        srl.finishLoadMore(4000);
                     }else {
                         srl.finishLoadMoreWithNoMoreData();
                     }
@@ -267,31 +290,6 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
             parent.removeView(view);
         }
         return view;
-    }
-
-    private void showName(){
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("http://10.7.89.30:8080/OurProject/name?food=家常菜");
-                    URLConnection conn = url.openConnection();
-                    InputStream in = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in,"GB2312"));
-                    String info1 = "";
-                    while((info1 = reader.readLine()) != null){
-                        wrapMessage1(info1);
-                    }
-                    wrapMessage2();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
     }
 
     @Override
@@ -358,6 +356,63 @@ public class FirstFragment extends Fragment implements ViewPager.OnPageChangeLis
         }
     }
 
+    private void showName(){
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    String[] food = {"家常菜","减肥餐","下饭菜","快手菜","宵夜"};
+                    Random random = new Random();
+                    String foods = food[random.nextInt(4)];
+                    MUrl = getResources().getText(R.string.num).toString();
+                    URL url = new URL(MUrl+"/name?food="+foods);
+                    URLConnection conn = url.openConnection();
+                    InputStream in = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in,"GB2312"));
+                    String info1 = "";
+                    while((info1 = reader.readLine()) != null){
+                        wrapMessage1(info1);
+                    }
+                    wrapMessage2();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    class CustomOnClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.click1:
+                    Intent intent1 = new Intent(getActivity(), ListActivity.class);
+                    intent1.putExtra("cai",jia.getText().toString());
+                    startActivity(intent1);
+                    break;
+                case R.id.click2:
+                    Intent intent2 = new Intent(getActivity(), ListActivity.class);
+                    intent2.putExtra("cai",gao.getText().toString());
+                    startActivity(intent2);
+                    break;
+                case R.id.click3:
+                    Intent intent3 = new Intent(getActivity(), ListActivity.class);
+                    intent3.putExtra("cai",hai.getText().toString());
+                    startActivity(intent3);
+                    break;
+                case R.id.click4:
+                    Intent intent4 = new Intent(getActivity(), ListActivity.class);
+                    intent4.putExtra("cai",duo.getText().toString());
+                    startActivity(intent4);
+                    break;
+            }
+        }
+    }
 
     private void wrapMessage1(String info) {
         Message message = Message.obtain();

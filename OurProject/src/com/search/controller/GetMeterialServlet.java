@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.search.entity.Meterial;
 import com.search.entity.Show;
 import com.search.service.Content;
 
@@ -37,10 +38,10 @@ public class GetMeterialServlet extends HttpServlet {
 		response.setCharacterEncoding("GB2312");
 		String food = request.getParameter("food");
 		Content content = new Content();
-		List<String> list = content.findMeterial(food);
+		List<Meterial> list = content.findMeterial(food);
 		PrintWriter out = response.getWriter();
 		for(int i=0;i<list.size();i++) {
-			out.write(list.get(i)+"\n");
+			out.write(list.get(i).getVname()+":"+list.get(i).getCount()+"\n");
 		}
 	}
 

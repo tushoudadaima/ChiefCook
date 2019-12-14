@@ -11,9 +11,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.example.administrator.shixun.Fragment.FirstFragment;
-import com.example.administrator.shixun.Fragment.FourFragment;
+import com.example.administrator.shixun.Fragment.FourthFragment;
 import com.example.administrator.shixun.Fragment.SecondFragment;
-import com.example.administrator.shixun.Fragment.ThreeFragment;
+import com.example.administrator.shixun.Fragment.ThirdFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
                 .setIndicator(getTabSpecView("tag3",R.drawable.dingdan,"订单"));
 
         fragmentTabHost.addTab(tabSpec3,
-                ThreeFragment.class,
+                ThirdFragment.class,
                 null);
         TabHost.TabSpec tabSpec4 = fragmentTabHost.newTabSpec("tag4")
                 .setIndicator(getTabSpecView("tag4",R.drawable.wode,"我的"));
 
         fragmentTabHost.addTab(tabSpec4,
-                FourFragment.class,
+                FourthFragment.class,
                 null);
         //设置默认选中哪一项
         fragmentTabHost.setCurrentTab(0);

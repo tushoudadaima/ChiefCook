@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">餐谋长</string>
-    <string name="num">10.7.89.30</string>
+    <string name="num">http://192.168.2.182:8080/OurProject</string>
 </resources>

@@ -23,9 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartActivity"></activity>
+        <activity android:name=".StartActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".SimpleActivity"></activity>
+        <activity android:name=".SimpleActivity" />
+        <activity android:name=".ListActivity" />
+        <activity android:name=".MakeActivity" />
+        <activity android:name=".DiscussActivity"></activity>
     </application>
 
 </manifest>

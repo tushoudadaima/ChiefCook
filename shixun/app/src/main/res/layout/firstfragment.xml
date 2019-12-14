@@ -29,7 +29,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="12dp"
-                    android:src="@drawable/load"
+                    android:src="@drawable/gougou"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="12dp" />
                 <com.example.administrator.shixun.SearchView
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center">
                 </com.example.administrator.shixun.SearchView>
-        </RelativeLayout>
+            </RelativeLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -94,73 +94,80 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
+                    android:layout_weight="1"
+                    android:id="@+id/click1">
                     <ImageView
                         android:id="@+id/img1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="15dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/dinner" />
+                        android:src="@drawable/shouhuo" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/img1"
                         android:layout_centerHorizontal="true"
+                        android:id="@+id/jia"
                         android:text="家常菜"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:id="@+id/click2">
                     <ImageView
                         android:id="@+id/img2"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="15dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/zhushi" />
+                        android:src="@drawable/shouye2" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/img2"
                         android:layout_centerHorizontal="true"
+                        android:id="@+id/gao"
                         android:text="糕点主食"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:id="@+id/click3">
                     <ImageView
                         android:id="@+id/img3"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="15dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/dinner" />
+                        android:src="@drawable/shou3" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/img3"
+                        android:id="@+id/hai"
                         android:layout_centerHorizontal="true"
                         android:text="海鲜生鲜"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:id="@+id/click4">
                     <ImageView
                         android:id="@+id/img4"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="15dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/dinner" />
+                        android:src="@drawable/shou4" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/img4"
+                        android:id="@+id/duo"
                         android:layout_centerHorizontal="true"
                         android:text="更多"/>
                 </RelativeLayout>
@@ -197,7 +204,7 @@
         </LinearLayout>
     </ScrollView>
         </LinearLayout>
-        <com.scwang.smartrefresh.layout.footer.BallPulseFooter
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

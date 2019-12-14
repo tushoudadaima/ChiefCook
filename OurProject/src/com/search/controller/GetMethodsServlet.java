@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.search.entity.Methods;
 import com.search.service.Content;
 
 /**
@@ -36,10 +37,10 @@ public class GetMethodsServlet extends HttpServlet {
 		response.setCharacterEncoding("GB2312");
 		String food = request.getParameter("food");
 		Content content = new Content();
-		List<String> list = content.findMethods(food);
+		List<Methods> list = content.findMethods(food);
 		PrintWriter out = response.getWriter();
 		for(int i=0;i<list.size();i++) {
-			out.write(list.get(i));
+			out.write(list.get(i).toString()+"\n");
 		}
 	}
 

@@ -10,17 +10,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.search.entity.Meterial;
+import com.search.entity.Methods;
 import com.search.entity.Show;
 
 public class Content {
+	
 	/**
 	 * 爬取食品材料
 	 * @param name
 	 * @return
 	 * @throws IOException
 	 */
-	public List<String> findMeterial(String name) throws IOException{
-		List<String> list = new ArrayList<String>();
+	public List<Meterial> findMeterial(String name) throws IOException{
+		List<Meterial> list = new ArrayList<>();
 		String url = "https://www.douguo.com/search/recipe/"+name;
         Document document = Jsoup.connect(url).get();
         Elements elements = document.getElementsByClass("cook-list");
@@ -30,12 +33,15 @@ public class Content {
         Document document2 = Jsoup.connect(lastUrl).get();
         Elements elements2 = document2.select("table");
         Elements table = elements2.select("td");
-        for(int i=0;i<table.size();i++) {
-        	String cString = table.get(i).text();
-        	list.add(cString);
+        Elements vname = document2.getElementsByClass("scname");
+        Elements count = document2.getElementsByClass("right scnum");
+        for(int i=0;i<vname.size();i++) {
+        	Meterial meterial = new Meterial();
+        	meterial.setVname(vname.get(i).text());
+        	meterial.setCount(count.get(i).text());
+        	list.add(meterial);
         }
         return list;
-        
 	}
 	
 	/**
@@ -44,8 +50,8 @@ public class Content {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<String> findMethods(String name) throws IOException{
-		List<String> list = new ArrayList<String>();
+	public List<Methods> findMethods(String name) throws IOException{
+		List<Methods> list = new ArrayList<Methods>();
 		String url = "https://www.douguo.com/search/recipe/"+name;
         Document document = Jsoup.connect(url).get();
         Elements elements = document.getElementsByClass("cook-list");
@@ -54,13 +60,12 @@ public class Content {
         String lastUrl = "https://www.douguo.com"+url2;
         Document document2 = Jsoup.connect(lastUrl).get();
         Elements elements2 = document2.getElementsByClass("step");
-        Elements element = elements2.select("h2");
-        System.out.println(element.text());
         Elements table = elements2.select("div .stepinfo");
+        Elements tables = document2.getElementsByClass("stepcont clearfix");
         for(int i=0;i<table.size();i++) {
+        	String iString = tables.get(i).select("img").attr("src");
         	String cString = table.get(i).text();
-        	list.add(cString);
-//        	System.out.println(cString+"\n");
+        	list.add(new Methods(iString,cString));
         }
 		return list;
 	}
@@ -85,30 +90,16 @@ public class Content {
 		return str;
 	}
 	
-	/**
-	 * 爬取到首页列表
-	 * @return
-	 * @throws IOException
-	 */
-	public List<Show> findList() throws IOException{
-		List<Show> list = new ArrayList<Show>();
-		String url = "https://www.douguo.com/search/recipe/减肥餐";
-		Document document = Jsoup.connect(url).get();
-		Elements elements = document.getElementsByClass("cook-list");
+	public String wordDown(String name) throws IOException {
+		String url = "https://www.douguo.com/search/recipe/"+name;
+        Document document = Jsoup.connect(url).get();
+        Elements elements = document.getElementsByClass("cook-list");
         Elements li = elements.select("li");
-        for(int i=0;i<li.size();i++) {
-        	Show show = new Show();
-        	String url2 = li.get(i).select("a").attr("href");
-        	String imgUrl = "https://www.douguo.com"+url2;
-        	Elements div = document.getElementsByClass("cook-info");
-        	String name = div.get(i).getElementsByClass("cookname text-lips ").text();
-        	String description = div.get(i).select("p").text();
-        	show.setName(name);
-        	show.setDescription(description);
-        	show.setImgUrl(imgUrl);
-        	list.add(show);
-        }
-		return list;
+        String url2 = li.get(0).select("a").attr("href");
+        String lastUrl = "https://www.douguo.com"+url2;
+        Document document2 = Jsoup.connect(lastUrl).get();
+        String word = document2.getElementsByClass("intro").get(0).text();
+		return word;
 	}
 	
 	/**
@@ -126,13 +117,14 @@ public class Content {
 		Document document = Jsoup.connect(url).get();
 		Elements elements = document.getElementsByClass("cook-list");
         Elements li = elements.select("li");
-        for(int i=0;i<li.size();i++) {
+        Random random2 = new Random();
+        int j = random2.nextInt(14);
+        for(int i=j;i<j+6;i++) {
         	Show show = new Show();
         	String url2 = li.get(i).select("a").attr("href");
         	String imgUrl = "https://www.douguo.com"+url2;
         	Document document2 = Jsoup.connect(imgUrl).get();
         	Elements elements2 = document2.getElementsByClass("wb100");
-//        	Elements e2 = elements2.select("img");
         	Elements div = document.getElementsByClass("cook-info");
         	String name = div.get(i).getElementsByClass("cookname text-lips ").text();
         	String description = div.get(i).select("p").text();
@@ -142,6 +134,7 @@ public class Content {
         	show.setImgUrl(imgUrl2);
         	list.add(show);
         }
+        System.out.println("好了");
 		return list;
 	}
 }

@@ -49,6 +49,8 @@ public class FirstAdapter extends BaseAdapter {
             viewholder.txt_name = convertView.findViewById(R.id.txt_name);
             viewholder.txt_description = convertView.findViewById(R.id.txt_description);
             viewholder.img = convertView.findViewById(R.id.img_list);
+            viewholder.eye = convertView.findViewById(R.id.eye);
+            viewholder.zan = convertView.findViewById(R.id.zan);
             convertView.setTag(viewholder);
         }else {
             viewholder = (ViewHolder) convertView.getTag();
@@ -57,6 +59,8 @@ public class FirstAdapter extends BaseAdapter {
         viewholder.txt_name.setText(show.getName());
         viewholder.txt_description.setText(show.getDescription());
         Glide.with(context).asBitmap().load(show.getImgUrl()).into(viewholder.img);
+        viewholder.eye.setText(show.getEye());
+        viewholder.zan.setText(show.getZan());
         return convertView;
     }
 
@@ -64,7 +68,7 @@ public class FirstAdapter extends BaseAdapter {
         TextView txt_name;
         TextView txt_description;
         ImageView img;
+        TextView eye;
+        TextView zan;
     }
-
-
 }

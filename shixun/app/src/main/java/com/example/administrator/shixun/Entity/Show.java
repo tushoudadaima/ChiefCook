@@ -6,6 +6,24 @@ public class Show {
     private String name;
     private String description;
     private String imgUrl;
+    private String eye;
+    private String zan;
+
+    public String getEye() {
+        return eye;
+    }
+
+    public void setEye(String eye) {
+        this.eye = eye;
+    }
+
+    public String getZan() {
+        return zan;
+    }
+
+    public void setZan(String zan) {
+        this.zan = zan;
+    }
 
     public String getName() {
         return name;
@@ -31,9 +49,11 @@ public class Show {
         this.imgUrl = imgUrl;
     }
 
-    public Show(String name, String description, String imgUrl) {
+    public Show(String name, String description, String imgUrl,String eye,String zan) {
         this.name = name;
         this.description = description;
         this.imgUrl = imgUrl;
+        this.eye = eye;
+        this.zan = zan;
     }
 }
