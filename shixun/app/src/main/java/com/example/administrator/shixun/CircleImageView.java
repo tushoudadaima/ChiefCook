@@ -21,6 +21,9 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
     //图片的宿放比例
     private float mScale;
 
+    private int x;
+    private int y;
+
     public CircleImageView(Context context) {
         super(context);
     }
@@ -37,6 +40,8 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         //由于是圆形，宽高应保持一致
         int size = Math.min(getMeasuredWidth(), getMeasuredHeight());
         mRadius = size / 2;
+        x=getMeasuredWidth()/2;
+        y=getMeasuredHeight()/2;
         setMeasuredDimension(size, size);
     }
     @SuppressLint("DrawAllocation")
@@ -61,12 +66,9 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
             bitmapShader.setLocalMatrix(matrix);
             mPaint.setShader(bitmapShader);
             //画圆形，指定好坐标，半径，画笔
-            canvas.drawCircle(mRadius, mRadius, mRadius, mPaint);
+            canvas.drawCircle(x, y, mRadius, mPaint);
         } else {
             super.onDraw(canvas);
         }
     }
-
-
-
 }

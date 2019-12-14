@@ -218,20 +218,20 @@ public class MainActivity extends AppCompatActivity {
 
         if(file.exists()){
 //            Toast.makeText(getApplication(),"存在"+buyerId+".jpg",Toast.LENGTH_SHORT).show();
-            asyncDownOp();
+            asyncDownBuyerOp();
         }else {
             file.mkdirs();
-            asyncDownOp();
+            asyncDownBuyerOp();
 //            Toast.makeText(getApplication(),"不存在"+buyerId+".jpg",Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void asyncDownOp() {
+    private void asyncDownBuyerOp() {
         new Thread(){
             @Override
             public void run() {
                 try {
-                    downImg();
+                    downBuyerImg();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void downImg() throws IOException {
+    private void downBuyerImg() throws IOException {
         Request request = new Request.Builder()
                 .url(wang_zhi+"DownBuyerImg?buyerId="+buyerId)
                 .build();

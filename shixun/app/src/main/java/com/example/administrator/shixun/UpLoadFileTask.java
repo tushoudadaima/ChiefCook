@@ -51,7 +51,6 @@ public class UpLoadFileTask extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        asyncDownOp();
 
         return null;
     }

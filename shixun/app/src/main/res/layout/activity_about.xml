@@ -2,37 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="left"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="180dp"
         android:paddingTop="20dp"
-        android:text="关于"/>
+        android:gravity="center"
+        android:textSize="30sp"
+        android:text="关于我们"/>
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="30dp"
-        android:text="近年来，都市生活节奏不断加快，一些上班族忙于工作而疏忽自身饮食，有些公司条件较好，会配备自己公司的食堂，但是很多人受限于工作条件只能自行解决三餐问题，所以近年来外卖行业风生水起，比如国内知名的美团、饿了么等外卖平台。但是网上也频频爆料出食品安全问题，尤其是外卖行业的食品安全问题更是层出不穷。于是我们团队旨在打造一个既能教会人做可口美味的饭菜，又能直接将用户挑选的新鲜蔬菜按时送到用户家中的APP。用户自己动手做饭，既能保证食品健康安全，又不必亲自跑到菜市场挑挑拣拣，省时省力又省心。
-本文档主要是对餐谋长APP的介绍，准确地描述了餐谋长APP的创意来源、所实现的功能的描述、用户需求分析，明确了所要开发的软件应具有的功能、界面，使软件开发人员能够清楚地了解用户的使用需求，使用户和商家能够了解本软件所实现的功能并且正确进行操作使用。预期读者为本软件的开发人员、目标用户。
-1.2背景
-
-" />
+        android:textSize="18sp"
+        android:text="      近年来，都市生活节奏不断加快，一些上班族忙于工作而疏忽自身饮食，有些公司条件较好，会配备自己公司的食堂，但是很多人受限于工作条件只能自行解决三餐问题，所以近年来外卖行业风生水起。但是网上也频频爆料出食品安全问题，尤其是外卖行业的食品安全问题更是层出不穷。于是我们团队旨在打造一个既能教会人做可口美味的饭菜，又能直接将用户挑选的新鲜蔬菜按时送到用户家中的APP。用户自己动手做饭，既能保证食品健康安全，又不必亲自跑到菜市场挑挑拣拣，省时省力又省心。" />
     <TextView
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="30dp"
-        android:text="a.	软件系统名称：餐谋长"/>
+        android:paddingTop="20dp"
+        android:textSize="18sp"
+        android:text="a.    软件系统名称：餐谋长"/>
     <TextView
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="30dp"
-        android:text="b.	本项目的提出者：张金乾"/>
+        android:paddingTop="20dp"
+        android:textSize="18sp"
+        android:text="b.    项目组长： 张子宇"/>
     <TextView
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="30dp"
-        android:text="开发者：张子宇、崔浩、袁世航、金豪、赵建文、张金乾"/>
+        android:paddingTop="20dp"
+        android:textSize="18sp"
+        android:text="c.    本项目的提出者：张金乾"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:textSize="18sp"
+        android:text="d.    开发者：张子宇、崔浩、袁世航、金豪、赵建文、张金乾"/>
 </LinearLayout>

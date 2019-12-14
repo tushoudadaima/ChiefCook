@@ -105,11 +105,8 @@ public class CountActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.firstchange:
                     Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
                     intent.setType("image/*");
                     startActivityForResult(intent,1);
-
-//                    asyncDownOp();
 
                     break;
                 case R.id.secondchange:
@@ -148,19 +145,19 @@ public class CountActivity extends AppCompatActivity {
             Cursor cursor = managedQuery(uri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
-            path = cursor.getString(column_index);
+            path = cursor.getString(column_index);//图片真实路径
 
-            path2=getFilesDir().getPath()+"/CanMouZhang/";
+            path2=getFilesDir().getPath()+"/CanMouZhang/";//data下CanMouZhang 文件夹
             path3 = path2+buyerId+".jpg";
             File file2 = new File(path2);
             File file3 = new File(path3);
             if(file2.exists()){
-//                Toast.makeText(getApplicationContext(),"存在文件 正在压缩",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"存在文件夹 正在压缩",Toast.LENGTH_SHORT).show();
                 compressBitmap(path,file3);//压缩函数
             }else {
-//                Toast.makeText(getApplicationContext(),"不存在文件 创建 正在压缩",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),"不存在文件夹 创建 正在压缩",Toast.LENGTH_SHORT).show();
                 file2.mkdirs();
-                compressBitmap(path,file3);
+                compressBitmap(path,file3);//压缩函数
             }
             Log.e("uri", uri.toString());
             //使用content的接口
@@ -192,14 +189,13 @@ public class CountActivity extends AppCompatActivity {
                 path3
         );
         //开始执行异步任务
-        task.execute(wang_zhi+"UpLoadBuyerHeadImg?buyerId="+buyerId);
 
         //如果一个手机号即可以是买家又可以是卖家 就得分开写下面的
-//        if(buyerOrSeller.equals("buyer")){
-//            task.execute(wang_zhi+"UpLoadBuyerHeadImg?buyerId="+buyerId);
-//        }else {
-//            Toast.makeText(getApplicationContext(),"seller还没写",Toast.LENGTH_SHORT).show();
-//        }
+        if(buyerOrSeller.equals("buyer")){
+            task.execute(wang_zhi+"UpLoadBuyerHeadImg?buyerId="+buyerId);
+        }else {
+            Toast.makeText(getApplicationContext(),"卖家暂不支持更改头像",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void compressBitmap(String filePath, File file){

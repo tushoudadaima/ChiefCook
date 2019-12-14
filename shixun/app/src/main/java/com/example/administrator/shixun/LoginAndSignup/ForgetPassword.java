@@ -1,5 +1,6 @@
 package com.example.administrator.shixun.LoginAndSignup;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +47,7 @@ public class ForgetPassword extends AppCompatActivity {
     private int a = 0;
 
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -387,7 +389,7 @@ public class ForgetPassword extends AppCompatActivity {
                     @Override
                     public void run() {
                         btn_getCode.setClickable(false);
-                        btn_getCode.setText("获取验证码"+"("+T+")");
+                        btn_getCode.setText("重发"+"("+T+")");
                     }
                 });
                 try {
