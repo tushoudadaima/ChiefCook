@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp">
+        <com.example.administrator.shixun.CircleImageView
+            android:id="@+id/img_user"
+            android:src="@drawable/biz_account_login_way_qq"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp" />
+        <TextView
+            android:id="@+id/user"
+            android:text="我的IT我做主"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/img_user"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="90dp"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/time"
+            android:text="2010-4-5 12:45:05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="90dp"/>
+        <TextView
+            android:id="@+id/contents"
+            android:text="今天我和我的七个室友一起做了这道菜，没有被宿管发现，真好，大家都夸这菜好吃，双击666"
+            android:maxLines="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_user"
+            android:layout_marginTop="20dp"/>
+    </RelativeLayout>
+</RelativeLayout>

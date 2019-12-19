@@ -1,0 +1,135 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:id="@+id/zs"
+        android:background="#40e0d0"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改密码"
+
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#fff"
+            android:textSize="22sp"
+            android:id="@+id/tv_title"
+            />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/zs"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/t1"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginLeft="20dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="frfrfrfrfrfrfrfrf"
+                    android:id="@+id/biaoa"
+                    android:textSize="28dp"
+                    android:layout_marginTop="31dp"
+                    android:layout_marginLeft="20dp"></TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="fdfdfdfdfd"
+                    android:id="@+id/shijian"
+                    android:layout_marginLeft="75dp"/>
+
+
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:id="@+id/pic"
+                    android:src="@drawable/m1"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="18dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bibibi"
+                    android:lineSpacingExtra="15dp"
+                    android:textSize="20dp"
+                    android:textColor="#000000"
+                    android:text="            老人总是站在街的拐角，专心致致地油炸臭豆腐。从没有听过他的吆喝声但总有许多食客寻着香味而来，在他的小担子前站成一圈。他的臭豆腐很有特色，
+                    乍看上去黑不溜湫，和别的臭豆腐没有什么两样，但一入锅再一出锅，就变得金灿灿、香喷喷，
+     涂上一层酱油或辣椒酱(他的辣椒酱是自制的，红艳艳的，辣得香，辣得舒服)，黄黄红红，煞是好看。小心翼翼咬上一口(因为非常烫)，外黄内白，外酥内嫩，香辣刺激，此时已不是在吃而是舌头打着卷往下吞。"></TextView>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:orientation="vertical" android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content">-->
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:background="#40e0d0"-->
+<!--        >-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="修改密码"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:textColor="#fff"-->
+<!--            android:textSize="22sp"-->
+<!--            android:id="@+id/tv_title"-->
+<!--            />-->
+<!--    </RelativeLayout>-->
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <ImageView-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:src="@drawable/t1"-->
+<!--            android:layout_marginTop="60dp">-->
+<!--        </ImageView>-->
+<!--    </RelativeLayout>-->
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2000dp"-->
+<!--        android:background="@drawable/t1"></ScrollView>-->
+
+
+
+<!--</LinearLayout>-->

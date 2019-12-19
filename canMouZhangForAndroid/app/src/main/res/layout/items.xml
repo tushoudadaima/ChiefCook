@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+
+    android:descendantFocusability="blocksDescendants">
+
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="这是我发的动态是不是的房价低"
+            android:maxEms="12"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/haoa"
+
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pinming"
+                android:layout_marginTop="0dp"
+                android:text="崔浩1号"
+
+                android:textSize="18dp"/>
+            <ImageView
+                android:paddingTop="42dp"
+                android:layout_width="wrap_content"
+                android:paddingLeft="20dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/zan1"></ImageView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pinzan"
+                android:text="12"
+                android:paddingTop="40dp"
+                android:paddingLeft="2dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pinlun"
+                android:paddingTop="43dp"
+                android:paddingLeft="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="90"
+                android:id="@+id/pinpin"
+                android:paddingLeft="5dp"
+                android:paddingTop="23dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="75dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/imgg"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/m1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="100dp"
+        android:background="#F7F7F7"/>
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/zhuangtai"-->
+
+<!--        android:textColor="#ff00"-->
+<!--        android:layout_alignParentRight="true"/>-->
+
+    <!--<Button-->
+    <!--android:id="@+id/idelete"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:text="下单"-->
+    <!--android:focusable="false"-->
+    <!--android:clickable="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_alignParentRight="true"/>-->
+
+</RelativeLayout>

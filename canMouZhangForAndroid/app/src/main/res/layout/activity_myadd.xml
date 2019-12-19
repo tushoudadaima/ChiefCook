@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#40e0d0"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发布"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#fff"
+            android:textSize="22sp"
+            android:id="@+id/tv_title"
+            />
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:hint="添加标题"
+        android:id="@+id/bib"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/suggestaaa"
+        android:layout_height="250dp"
+        android:background="#F0F0F0"
+        android:textSize="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="top"
+
+        android:hint="分享新鲜事....."/>
+
+    <ImageView
+        android:id="@+id/ImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+
+        android:layout_marginTop="25dp"
+        android:src="@drawable/tiantu" />
+
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/Button02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:text="发布" />
+    </RelativeLayout>
+</LinearLayout>
